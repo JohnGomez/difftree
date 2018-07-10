@@ -8,7 +8,7 @@ public class Diff {
 
     private static Map<String, Map<String, String>> diffResult = new HashMap<String, Map<String, String>>();
 
-    private static void diffTreeBetweenTwoObjects(Object o1, Object o2, String prefixFieldName) throws IllegalAccessException, InstantiationException, NoSuchFieldException {
+    private static void diffTreeBetweenTwoObjects(Object o1, Object o2, String prefixFieldName)  {
 
         Class<?> old = o1.getClass();
         Class<?> actual = o2.getClass();
@@ -17,27 +17,33 @@ public class Diff {
         Field[] fields = old.getDeclaredFields();
 
         for(Field field : fields) {
-            Field field2 = actual.getDeclaredField(field.getName());
-            Class<?> fieldType  = field.getType();
+            try {
+                Field field2 = actual.getDeclaredField(field.getName());
+                Class<?> fieldType  = field.getType();
 
-            // TODO: Fazer tratamento para lista de objetos
-            if(fieldType.isPrimitive() || fieldType.getPackage().getName().equals("java.lang")) {
-                Object value = getValueByField(field, o1);
-                Object value2 = getValueByField(field2, o2);
+                // TODO: Fazer tratamento para lista de objetos
+                if(fieldType.isPrimitive() || fieldType.getPackage().getName().equals("java.lang")) {
+                    Object value = getValueByField(field, o1);
+                    Object value2 = getValueByField(field2, o2);
 
-                if (!value.equals(value2)) {
-                    String fieldName = "";
-                    if(prefixFieldName != null) {
-                        fieldName = prefixFieldName+ "." +field.getName();
-                    } else {
-                        fieldName = field.getName();
+                    if (!value.equals(value2)) {
+                        String fieldName = "";
+                        if(prefixFieldName != null) {
+                            fieldName = prefixFieldName+ "." +field.getName();
+                        } else {
+                            fieldName = field.getName();
+                        }
+                        diffResult.put(fieldName, getDiff(value,value2));
                     }
-                    diffResult.put(fieldName, getDiff(value,value2));
+                } else {
+                    field.setAccessible(true);
+                    field2.setAccessible(true);
+                    diffTreeBetweenTwoObjects(field.get(o1), field2.get(o2), field.getName());
                 }
-            } else {
-                field.setAccessible(true);
-                field2.setAccessible(true);
-                diffTreeBetweenTwoObjects(field.get(o1), field2.get(o2), field.getName());
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }catch (IllegalAccessException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -59,7 +65,7 @@ public class Diff {
         return diff;
     }
 
-    public static Map<String, Map<String, String>> diff(Object o1, Object o2) throws IllegalAccessException, NoSuchFieldException, InstantiationException {
+    public static Map<String, Map<String, String>> diff(Object o1, Object o2) {
         diffTreeBetweenTwoObjects(o1,o2, null);
         return diffResult;
     }

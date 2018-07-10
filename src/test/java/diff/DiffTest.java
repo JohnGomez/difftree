@@ -8,7 +8,7 @@ public class DiffTest {
 
 
     @Test
-    public void testDiffTreeTwoObjects() throws IllegalAccessException, NoSuchFieldException, InstantiationException {
+    public void testDiffTreeTwoObjects() {
         Pessoa pessoa1 = new Pessoa();
         Pessoa pessoa2 = new Pessoa();
 
@@ -34,7 +34,6 @@ public class DiffTest {
         pessoa2.setEndereco(endereco2);
 
         Diff.diff(pessoa1,pessoa2);
-
 
     }
 }
