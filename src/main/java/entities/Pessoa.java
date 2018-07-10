@@ -6,6 +6,7 @@ public class Pessoa {
     private String sobrenome;
     private int idade;
     private Endereco endereco;
+    private TipoEnum tipo;
 
     public String getSobrenome() {
         return sobrenome;
@@ -37,5 +38,13 @@ public class Pessoa {
 
     public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
+    }
+
+    public TipoEnum getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(TipoEnum tipo) {
+        this.tipo = tipo;
     }
 }

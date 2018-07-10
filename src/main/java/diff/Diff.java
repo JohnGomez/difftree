@@ -13,32 +13,33 @@ public class Diff {
         Class<?> old = o1.getClass();
         Class<?> actual = o2.getClass();
 
-        //TODO: Verificar se os dois são filhos da mesma classe
         Field[] fields = old.getDeclaredFields();
 
-        for(Field field : fields) {
+        for(Field field1 : fields) {
             try {
-                Field field2 = actual.getDeclaredField(field.getName());
-                Class<?> fieldType  = field.getType();
+                Field field2 = actual.getDeclaredField(field1.getName());
+                Class<?> fieldType  = field1.getType();
 
                 // TODO: Fazer tratamento para lista de objetos
-                if(fieldType.isPrimitive() || fieldType.getPackage().getName().equals("java.lang")) {
-                    Object value = getValueByField(field, o1);
+                if(fieldType.isPrimitive() || fieldType.getPackage().getName().equals("java.lang") || fieldType.isEnum()) {
+                    Object value1 = getValueByField(field1, o1);
                     Object value2 = getValueByField(field2, o2);
 
-                    if (!value.equals(value2)) {
+                    if (value1 != null && !value1.equals(value2)) {
                         String fieldName = "";
                         if(prefixFieldName != null) {
-                            fieldName = prefixFieldName+ "." +field.getName();
+                            fieldName = prefixFieldName+ "." +field1.getName();
                         } else {
-                            fieldName = field.getName();
+                            fieldName = field1.getName();
                         }
-                        diffResult.put(fieldName, getDiff(value,value2));
+                        diffResult.put(fieldName, getDiff(value1,value2));
                     }
+                }  else if (fieldType.isInterface() || fieldType.isArray()) {
+                    System.err.println("LISTA");
                 } else {
-                    field.setAccessible(true);
+                    field1.setAccessible(true);
                     field2.setAccessible(true);
-                    diffTreeBetweenTwoObjects(field.get(o1), field2.get(o2), field.getName());
+                    diffTreeBetweenTwoObjects(field1.get(o1), field2.get(o2), field1.getName());
                 }
             } catch (NoSuchFieldException e) {
                 e.printStackTrace();
