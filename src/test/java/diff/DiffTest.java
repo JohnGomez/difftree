@@ -33,7 +33,7 @@ public class DiffTest {
         pessoa2.setSobrenome("gomess");
         pessoa2.setEndereco(endereco2);
 
-        Diff.diff(pessoa1,pessoa2, null);
+        Diff.diff(pessoa1,pessoa2);
 
 
     }

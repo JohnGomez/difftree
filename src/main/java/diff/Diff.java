@@ -1,25 +1,22 @@
 package diff;
 
-import javafx.beans.binding.ObjectExpression;
-
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Diff {
 
-    static Map<String, Map<String, String>> diffResult = new HashMap<String, Map<String, String>>();
+    private static Map<String, Map<String, String>> diffResult = new HashMap<String, Map<String, String>>();
 
-    public static void diffTreeBetweenTwoObjects(Object o1, Object o2, String prefixFieldName) throws IllegalAccessException, InstantiationException, NoSuchFieldException {
+    private static void diffTreeBetweenTwoObjects(Object o1, Object o2, String prefixFieldName) throws IllegalAccessException, InstantiationException, NoSuchFieldException {
 
         Class<?> old = o1.getClass();
         Class<?> actual = o2.getClass();
 
         //TODO: Verificar se os dois são filhos da mesma classe
-
         Field[] fields = old.getDeclaredFields();
 
-        for (Field field : fields) {
+        for(Field field : fields) {
             Field field2 = actual.getDeclaredField(field.getName());
             Class<?> fieldType  = field.getType();
 
@@ -46,7 +43,7 @@ public class Diff {
     }
 
 
-    public static Object getValueByField(Field field, Object classType) {
+    private static Object getValueByField(Field field, Object classType) {
         try {
             field.setAccessible(true);
             return field.get(classType);
@@ -56,13 +53,13 @@ public class Diff {
         return null;
     }
 
-    public static Map<String, String> getDiff(Object value1, Object value2) {
+    private static Map<String, String> getDiff(Object value1, Object value2) {
         Map<String, String> diff = new HashMap<String, String>();
         diff.put(value1.toString(), value2.toString());
         return diff;
     }
 
-    public static Map<String, Map<String, String>> diff(Object o1, Object o2, Object o) throws IllegalAccessException, NoSuchFieldException, InstantiationException {
+    public static Map<String, Map<String, String>> diff(Object o1, Object o2) throws IllegalAccessException, NoSuchFieldException, InstantiationException {
         diffTreeBetweenTwoObjects(o1,o2, null);
         return diffResult;
     }
