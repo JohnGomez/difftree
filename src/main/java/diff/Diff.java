@@ -2,6 +2,7 @@ package diff;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Diff {
@@ -20,7 +21,6 @@ public class Diff {
                 Field field2 = actual.getDeclaredField(field1.getName());
                 Class<?> fieldType  = field1.getType();
 
-                // TODO: Fazer tratamento para lista de objetos
                 if(fieldType.isPrimitive() || fieldType.getPackage().getName().equals("java.lang") || fieldType.isEnum()) {
                     Object value1 = getValueByField(field1, o1);
                     Object value2 = getValueByField(field2, o2);
@@ -34,8 +34,15 @@ public class Diff {
                         }
                         diffResult.put(fieldName, getDiff(value1,value2));
                     }
-                }  else if (fieldType.isInterface() || fieldType.isArray()) {
-                    System.err.println("LISTA");
+                }  else if (fieldType.isInterface()) {
+                    List<Object> values1 = (List<Object>) getValueByField(field1, o1);
+                    List<Object> values2 = (List<Object>) getValueByField(field1, o2);
+
+                    for(int i=0; i < values1.size();i++) {
+                        String filedName = field1.getName() +"["+i+"]";
+                        diffTreeBetweenTwoObjects(values1.get(i), values2.get(i),filedName);
+                    }
+
                 } else {
                     field1.setAccessible(true);
                     field2.setAccessible(true);

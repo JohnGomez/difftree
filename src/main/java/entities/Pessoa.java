@@ -1,12 +1,15 @@
 package entities;
 
+import java.util.List;
+
 public class Pessoa {
 
-    private String nome;
-    private String sobrenome;
-    private int idade;
-    private Endereco endereco;
-    private TipoEnum tipo;
+    private String       nome;
+    private String       sobrenome;
+    private int          idade;
+    private Endereco     endereco;
+    private TipoEnum     tipo;
+    private List<Telefone> telefones;
 
     public String getSobrenome() {
         return sobrenome;
@@ -46,5 +49,13 @@ public class Pessoa {
 
     public void setTipo(TipoEnum tipo) {
         this.tipo = tipo;
+    }
+
+    public List<Telefone> getTelefones() {
+        return telefones;
+    }
+
+    public void setTelefones(List<Telefone> telefones) {
+        this.telefones = telefones;
     }
 }
