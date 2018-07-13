@@ -32,9 +32,15 @@ public class DiffTest {
         telefone.setNumero("789654321");
         telefone.setTipo("qualquer");
         telefones.add(telefone);
+        telefone.setNumero("789654321");
+        telefone.setTipo("qualquer");
+        telefones.add(telefone);
 
         List<Telefone> telefones2 = new ArrayList<Telefone>();
         telefone = new Telefone();
+        telefone.setNumero("98765432");
+        telefone.setTipo("NOVO");
+        telefones2.add(telefone);
         telefone.setNumero("98765432");
         telefone.setTipo("NOVO");
         telefones2.add(telefone);
